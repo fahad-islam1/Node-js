@@ -1,24 +1,26 @@
-const express = require('express');
-const path = require('path');
+const dbConnection = require('./mongo db/db_connection');
 
-const app = express();
+// dbConnection().then(res => {
+//   console.log('Connected to MongoDB');
+//   res
+//     .find({ name: 'oppo a10' })
+//     .toArray()
+//     .then(data => {
+//       console.log(data);
+//     });
+// });
 
-const reqfilter = (req, resp, next) => {
-  console.log('reqfilter');
-  if (!req.query.age) {
-    resp.send('Please Enter Your age');
-  } else if (req.query.age < 18) {
-    resp.send('You are not eliegble for this website ....You are under 18                  ');
-  } else {
-    next();
+// console.warn(dbConnection());
+
+// second method
+
+const main = async () => {
+  try {
+    const db = await dbConnection();
+    const data = await db.find({}).toArray();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
   }
 };
-app.use(reqfilter);
-app.get('', (req, resp) => {
-  resp.send('Welcome to home page');
-  console.log('fahds');
-});
-
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
-});
+main();
